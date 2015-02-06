@@ -1,0 +1,29 @@
+This programming assignment is mainly divided into 2 parts:
+1.Parsing the input
+2.execute the input
+I will first briefly talk about parsing the input:
+update:
+After a close examination to the code provided,I find that struct parsestate_t has 2 pointers that point to the current parsing position and last parsing position of the input string. And these 2 points can be moved forward by searching the next space in the input string. The the parsed command/token can be stored for future use.(this process will be done in multiple parse functions)
+old thoughts:
+C provides some functions to parse strings, although not strong as java,etc. ,we are still able to do the same job.
+I choose 'strtok' to parse the input. With a while loop it can split a string into multiple parts.Ex:
+  token = strtok(str," ");//split string by spaces
+  while(token){
+    printf("%s\n",token);//print each token
+    token = strtok(NULL," ");//keep spliting itself
+  }
+
+Using this method I can save each part of the input string and analyze them later.
+Now I will talk about the implementation of my shell. Since this is only an early design, mistakes may be made.
+implementation of cd(change dir):2 parts. 1.show the directory:this is simple. C provides 'realpath' function to return any path name that we want. For the current path name, simply do 'realpath("./",path)'.2. change directory: use system call chdir. need to set initial directory. will be my home folder.
+implementation of IO redirection: not hard. open a file(may use fopen or open), and fprintf the result before '>'. similar to '<', read the file and use it as input.
+implementation of pipe: might be hard. need to execute piped commands one by one, save the result of the previous one and use it as input of the second command. 
+Implementation of parentheses: simply execute each command as their order, then combine the output.
+Implementation of conditional: true && command = execute the command. false && command = dont execute. true || command = execute. false || command = execute............ command1 && command2 = execute command1&2. command1 || command2 = execute command1. string && true or false = the string itself.
+need to know these to implement.
+System calls being used:
+fork: not very clear about it. maybe used to launch programs.
+waitpid: as stated in class, this will be used with fork.
+open & close: may replace fopen & fclose. they dont return FILE pointer but int. Need to research more to decide which to use.
+pipe: can link two files. Can it be used to implement shell's pipe? need to do more research.
+chdir: very helping on implementing cd(change dir) command. if return false, it means there is no such directory.
